@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import org.apache.commons.lang3.StringUtils;
 
 public class HelloController {
 
@@ -240,21 +241,50 @@ public class HelloController {
         screen.setText(expression);
 
     }
-
+    void stateEverything(boolean state){
+        aBtn.setDisable(state);
+        bBtn.setDisable(state);
+        cBtn.setDisable(state);
+        dBtn.setDisable(state);
+        eBtn.setDisable(state);
+        fBtn.setDisable(state);
+        zeroBtn.setDisable(state);
+        oneBtn.setDisable(state);
+        twoBtn.setDisable(state);
+        threeBtn.setDisable(state);
+        fiveBtn.setDisable(state);
+        fourBtn.setDisable(state);
+        sixBtn.setDisable(state);
+        sevenBtn.setDisable(state);
+        eightBtn.setDisable(state);
+        nineBtn.setDisable(state);
+        mulBtn.setDisable(state);
+        divBtn.setDisable(state);
+        plusBtn.setDisable(state);
+        minusBtn.setDisable(state);
+        equalBtn.setDisable(state);
+        modeBtn.setDisable(state);
+        modeScreen.setDisable(state);
+    }
     @FXML
     void getResult(ActionEvent event) {
         if(modeScreen.getText().equals("HEX")){
             ArithmeticApp newApp=new ArithmeticApp(expression);
             String result=newApp.getResult();
-            System.out.println(result);
-            screen.setText(result);
+            expression=result;
+            if(!expression.contains("7FFFFF") && !expression.contains("2147483647") && !expression.contains("Error")) {
+                screen.setText(result);
+            }
+            else{
+                expression="Error";
+                screen.setText(expression);
+            }
         }
         else{
             DoubleEvaluator doubleevaluator = new DoubleEvaluator();
-            String result=""+doubleevaluator.evaluate(expression);
-            System.out.println(result);
-
-            screen.setText(result);
+                String result = "" + (doubleevaluator.evaluate(expression).intValue());
+                expression=result;
+                screen.setText(result);
         }
     }
 
@@ -269,6 +299,17 @@ public class HelloController {
             dBtn.setDisable(true);
             eBtn.setDisable(true);
             fBtn.setDisable(true);
+            if(screen.getText()!=""){
+                //convert from hex to dec
+                if(isHex(screen.getText())){
+                    expression=""+hextoint(screen.getText());
+                    screen.setText(""+hextoint(screen.getText()));
+                }
+                else {
+                    expression = "Error";
+                    screen.setText(expression);
+                }
+            }
         }
         else{
             aBtn.setDisable(false);
@@ -277,7 +318,45 @@ public class HelloController {
             dBtn.setDisable(false);
             eBtn.setDisable(false);
             fBtn.setDisable(false);
+            if(!screen.getText().equals("")){
+                //convert from dec to hex
+                if(isDec(screen.getText())) {
+                    expression = inttoHex(Integer.parseInt(screen.getText()));
+                    screen.setText(inttoHex(Integer.parseInt(screen.getText())));
+                }
+                else {
+                    expression = "Error";
+                    screen.setText(expression);
+                }
+            }
         }
+    }
+    String inttoHex(int number) {
+        String hexResult = "";
+        String digits = "0123456789ABCDEF";
+        while (number >= 1) {
+            hexResult=hexResult.concat(""+digits.charAt((int) number % 16));
+            number /= 16;
+        }
+        hexResult = StringUtils.reverse(hexResult);
+        return hexResult;
+    }
+    boolean isHex(String c) {
+        return c.matches("[A-F0-9]");
+    }
+    boolean isDec(String c){
+        return c.matches("[0-9]");
+    }
+    int hextoint(String hex) {
+        int size=hex.length();
+        String digits = "0123456789ABCDEF";
+        int result=0;
+        while(size>0){
+            result+=(digits.indexOf(hex.charAt(size-1))*Math.pow(16,hex.length()-size));
+            size-=1;
+        }
+        return result;
     }
 
 }
+
