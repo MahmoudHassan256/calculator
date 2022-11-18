@@ -272,13 +272,8 @@ public class HelloController {
             ArithmeticApp newApp=new ArithmeticApp(expression);
             String result=newApp.getResult();
             expression=result;
-            if(!expression.contains("7FFFFF") && !expression.contains("2147483647") && !expression.contains("Error")) {
                 screen.setText(result);
-            }
-            else{
-                expression="Error";
-                screen.setText(expression);
-            }
+
         }
         else{
             DoubleEvaluator doubleevaluator = new DoubleEvaluator();
@@ -301,14 +296,9 @@ public class HelloController {
             fBtn.setDisable(true);
             if(screen.getText()!=""){
                 //convert from hex to dec
-                if(isHex(screen.getText())){
                     expression=""+hextoint(screen.getText());
                     screen.setText(""+hextoint(screen.getText()));
-                }
-                else {
-                    expression = "Error";
-                    screen.setText(expression);
-                }
+
             }
         }
         else{
@@ -320,14 +310,9 @@ public class HelloController {
             fBtn.setDisable(false);
             if(!screen.getText().equals("")){
                 //convert from dec to hex
-                if(isDec(screen.getText())) {
                     expression = inttoHex(Integer.parseInt(screen.getText()));
                     screen.setText(inttoHex(Integer.parseInt(screen.getText())));
-                }
-                else {
-                    expression = "Error";
-                    screen.setText(expression);
-                }
+
             }
         }
     }
